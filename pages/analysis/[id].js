@@ -1,0 +1,73 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import styles from '../../styles/Home.module.css';
+
+const mockAnalysis = () => ({
+  confidence: Math.floor(Math.random() * 100),
+  funding: Math.floor(Math.random() * 10000),
+  apr: (Math.random() * 10 + 1).toFixed(2),
+  contributors: Math.floor(Math.random() * 10) + 1,
+  avgContributed: Math.floor(Math.random() * 2000) + 500,
+  loanProgress: Math.floor(Math.random() * 10000),
+  loanGoal: 15000,
+  kyc: Math.random() > 0.2,
+  attestation: Math.random() > 0.5 ? 'View' : 'None',
+  harvestsPerYear: Math.floor(Math.random() * 3) + 1,
+  monthsBetween: Math.floor(Math.random() * 6) + 3,
+  estNextHarvest: 'January 2025',
+  fieldSize: Math.floor(Math.random() * 50) + 1
+});
+
+export default function ProductAnalysis() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('selectedProduct');
+      if (stored) {
+        setProduct(JSON.parse(stored));
+      }
+    }
+  }, [id]);
+
+  if (!product) {
+    return <div className={styles.container}><h1 style={{ color: '#000' }}>Loading...</h1></div>;
+  }
+
+  const analysis = mockAnalysis();
+
+  return (
+    <div className={styles.container} style={{ color: '#000' }}>
+      <h1 className={styles.title} style={{ color: '#000' }}>{product.name} Analysis</h1>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center', color: '#000' }}>
+        <div style={{ background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px #0001', padding: 24, minWidth: 320, maxWidth: 350, color: '#000' }}>
+          <img src={product.image} alt={product.name} style={{ width: '100%', borderRadius: 12, marginBottom: 16 }} />
+          <h2 style={{ marginBottom: 8, color: '#000' }}>{product.name}</h2>
+          <div style={{ marginBottom: 8, color: '#000' }}>{product.farmer}</div>
+          <div style={{ marginBottom: 16, color: '#000' }}><b>Price:</b> ${product.price}</div>
+          <div style={{ marginBottom: 16, color: '#000' }}><b>Description:</b> {product.description}</div>
+          <div style={{ display: 'flex', gap: 16, marginBottom: 16, color: '#000' }}>
+            <div>
+              <b>Crops Score:</b>
+              <div style={{ fontSize: 32, color: analysis.confidence > 60 ? 'green' : analysis.confidence > 40 ? 'orange' : 'red' }}>{analysis.confidence}</div>
+            </div>
+          </div>
+          <div style={{ marginBottom: 8, color: '#000' }}>
+            <b>Field Size:</b> {analysis.fieldSize} Ha
+          </div>
+          <div style={{ marginBottom: 8, color: '#000' }}>
+            <b>Avg. Harvests/Year:</b> {analysis.harvestsPerYear}
+          </div>
+          <div style={{ marginBottom: 8, color: '#000' }}>
+            <b>Avg. Time Between Harvests:</b> {analysis.monthsBetween} Months
+          </div>
+          <div style={{ marginBottom: 8, color: '#000' }}>
+            <b>EST. next full Grown:</b> {analysis.estNextHarvest}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+} 

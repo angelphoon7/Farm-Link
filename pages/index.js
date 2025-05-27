@@ -1,8 +1,10 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
   const featuredProducts = [
     {
       id: 1,
@@ -29,6 +31,22 @@ export default function Home() {
       description: 'Crisp and fresh lettuce'
     }
   ];
+
+  const fetchNDVI = async (lat, lng, startDate, endDate) => {
+    const res = await fetch('https://REGION-PROJECT_ID.cloudfunctions.net/getHistoricNDVI', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lng, startDate, endDate }),
+    });
+    const data = await res.json();
+    return data; // { dates: [...], ndvi: [...] }
+  };
+
+  // Store product in localStorage and navigate to analysis page
+  const handleProductAnalysis = (product) => {
+    localStorage.setItem('selectedProduct', JSON.stringify(product));
+    router.push(`/analysis/${product.id}`);
+  };
 
   return (
     <div className={styles.container}>
@@ -74,7 +92,7 @@ export default function Home() {
           <h2>Featured Products</h2>
           <div className={styles.productGrid}>
             {featuredProducts.map((product) => (
-              <div key={product.id} className={styles.productCard}>
+              <div key={product.id} className={styles.productCard} style={{ cursor: 'pointer' }} onClick={() => handleProductAnalysis(product)}>
                 <div className={styles.productImage}>
                   <img src={product.image} alt={product.name} />
                 </div>
@@ -83,6 +101,7 @@ export default function Home() {
                 <p className={styles.price}>${product.price}</p>
                 <p className={styles.description}>{product.description}</p>
                 <button className={styles.addToCart}>Add to Cart</button>
+                <div style={{ marginTop: 8, color: '#4CAF50', fontWeight: 600 }}>View Analysis</div>
               </div>
             ))}
           </div>
