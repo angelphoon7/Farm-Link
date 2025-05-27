@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
+import SatelliteMap from '../components/SatelliteMap';
 
 export default function CropManagement() {
   const router = useRouter();
@@ -8,6 +9,7 @@ export default function CropManagement() {
   const [formData, setFormData] = useState({
     cropType: '',
     location: '',
+    coordinates: null,
     size: '',
     amount: '',
     plantingDate: '',
@@ -25,13 +27,20 @@ export default function CropManagement() {
     }));
   };
 
+  const handleLocationSelect = (coordinates) => {
+    setFormData(prevState => ({
+      ...prevState,
+      coordinates,
+      location: `${coordinates.lat.toFixed(6)}, ${coordinates.lng.toFixed(6)}`
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      // Here you would typically make an API call to save the crop data
       const newCrop = {
-        id: Date.now(), // temporary ID generation
+        id: Date.now(),
         ...formData,
         createdAt: new Date().toISOString()
       };
@@ -40,6 +49,7 @@ export default function CropManagement() {
       setFormData({
         cropType: '',
         location: '',
+        coordinates: null,
         size: '',
         amount: '',
         plantingDate: '',
@@ -48,13 +58,6 @@ export default function CropManagement() {
         irrigationMethod: '',
         notes: ''
       });
-      
-      // You can add an API call here to save to your backend
-      // await fetch('/api/crops', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(newCrop)
-      // });
       
     } catch (error) {
       console.error('Error adding crop:', error);
@@ -89,6 +92,8 @@ export default function CropManagement() {
                 value={formData.location}
                 onChange={handleInputChange}
                 className={styles.formInput}
+                placeholder="Select location on map"
+                readOnly
                 required
               />
             </div>
@@ -176,6 +181,11 @@ export default function CropManagement() {
             </div>
           </div>
 
+          <div className={styles.mapContainer}>
+            <label className={styles.label}>Select Location on Map</label>
+            <SatelliteMap onLocationSelect={handleLocationSelect} />
+          </div>
+
           <div>
             <label className={styles.label}>Additional Notes</label>
             <textarea
@@ -198,7 +208,6 @@ export default function CropManagement() {
         </form>
       </div>
 
-      {/* Display existing crops */}
       <div className={styles.farmerInterface}>
         <h2>Your Crops</h2>
         <div className={styles.productGrid}>

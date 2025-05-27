@@ -288,4 +288,30 @@
   font-weight: 500;
   color: #000000;
   margin-bottom: 0.5rem;
+}
+
+.mapContainer {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.satellite-map-container {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.satellite-image-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.satellite-image-container h3 {
+  color: #000000;
+  margin: 0 0 1rem 0;
 } 
