@@ -46,9 +46,28 @@ export default function Home() {
           <p className={styles.description}>
             Connect directly with local farmers and get the freshest produce delivered to your doorstep
           </p>
-          <Link href="/products" className={styles.ctaButton}>
-            Shop Now
-          </Link>
+          <div className={styles.buttonGroup}>
+            <Link href="/products" className={styles.ctaButton}>
+              Shop Now
+            </Link>
+            <Link href="/crop" className={styles.farmerButton}>
+              Manage Crops
+            </Link>
+          </div>
+        </section>
+
+        <section className={styles.farmerInterface}>
+          <h2>Farmer Dashboard</h2>
+          <div className={styles.farmerActions}>
+            <Link href="/crop" className={styles.farmerActionCard}>
+              <h3>Manage Your Crops</h3>
+              <p>Add, edit, and track your crops</p>
+            </Link>
+            <Link href="/products" className={styles.farmerActionCard}>
+              <h3>List Products</h3>
+              <p>Add new products to your store</p>
+            </Link>
+          </div>
         </section>
 
         <section className={styles.featured}>
